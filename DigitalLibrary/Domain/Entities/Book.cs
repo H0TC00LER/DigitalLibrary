@@ -1,4 +1,7 @@
-﻿namespace Domain.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities
 {
     public class Book
     {
@@ -8,6 +11,6 @@
         public string Description { get; set; }
         public string CoverUrl { get; set; }
         public Author Author { get; set; }
-        public int AuthorId { get; set; }
+        public string Text { get; set; }
     }
 }
