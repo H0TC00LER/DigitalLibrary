@@ -12,7 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
+builder.Services
+    .AddDbContext<AppDbContext>(options => options.UseSqlServer(connString, b => b.MigrationsAssembly("DigitalLibrary")));
+
 builder.Services.AddAuthentication();
 
 builder.Services.ConfigureIdentity(); //ext

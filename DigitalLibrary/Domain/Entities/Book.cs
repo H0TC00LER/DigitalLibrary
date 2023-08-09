@@ -10,7 +10,7 @@ namespace Domain.Entities
         public string Description { get; set; }
         public string CoverUrl { get; set; }
         public Author Author { get; set; }
-        public string Text { get; set; }
+        public string TextUrl { get; set; }
         public BookTag BookTag { get; set; }
     }
 }
