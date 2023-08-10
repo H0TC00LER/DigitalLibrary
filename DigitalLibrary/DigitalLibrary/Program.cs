@@ -1,4 +1,5 @@
 using DigitalLibrary.Extencions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen();
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services
     .AddDbContext<AppDbContext>(options => options.UseSqlServer(connString, b => b.MigrationsAssembly("DigitalLibrary")));
+
+builder.Services.AddScoped<Service.Contracts.IAuthenticationService, Service.Implementations.AuthenticationService>();
 
 builder.Services.AddAuthentication();
 

@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.9" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataTransferObjects\" />
-  </ItemGroup>
-
 </Project>
