@@ -31,5 +31,16 @@ namespace DigitalLibrary.Controllers
             return StatusCode(201);
         }
 
+        [HttpPost("login")]
+        [ValidateModel]
+        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        {
+            if (!await _authenticationService.ValidateUser(user))
+                return Unauthorized();
+
+            return Ok(new { Token = await _authenticationService.CreateToken() });
+        }
+
+
     }
 }

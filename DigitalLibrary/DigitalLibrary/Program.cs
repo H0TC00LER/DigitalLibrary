@@ -1,5 +1,4 @@
 using DigitalLibrary.Extencions;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 
@@ -10,7 +9,7 @@ builder.Services.ConfigureCors(); //ext
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwaggerGen();
 
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services
@@ -21,6 +20,7 @@ builder.Services.AddScoped<Service.Contracts.IAuthenticationService, Service.Imp
 builder.Services.AddAuthentication();
 
 builder.Services.ConfigureIdentity(); //ext
+builder.Services.ConfigureJWT(builder.Configuration); //ext
 
 
 var app = builder.Build();
