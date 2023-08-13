@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
+using Service.Contracts;
 
 namespace DigitalLibrary.Controllers
 {
@@ -9,17 +10,21 @@ namespace DigitalLibrary.Controllers
     public class BooksController : Controller
     {
         private readonly AppDbContext _context;
-        public BooksController(AppDbContext context)
+        private readonly IBookLoadingService _bookLoadingService;
+        public BooksController(AppDbContext context, IBookLoadingService bookLoadingService)
         {
             _context = context;
+            _bookLoadingService = bookLoadingService;
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+        [HttpGet("test")]
+        public ActionResult<string> DoTest()
+        {
+            Console.WriteLine(_context.Users.First().Id);
+            return _context.Users.First().Id;
+        }
 
-        [HttpGet("")]
+        [HttpGet]
         public ActionResult<IEnumerable<Book>> GetAllBooks()
         {
             var books = _context.Books.AsNoTracking().ToList();
@@ -34,6 +39,17 @@ namespace DigitalLibrary.Controllers
                 return NotFound($"There's no book with id {id}");
 
             return book;
+        }
+
+        [HttpGet("{id}/content")]
+        public async Task<ActionResult> GetBookContent(string url)
+        {
+            var byteBook = await _bookLoadingService.LoadBook(url);
+            Response.Headers.Add("Content-Disposition", $"inline; filename={url}.pdf");
+            Response.ContentType = "application/pdf";
+            await Response.Body.WriteAsync(byteBook, 0, byteBook.Length);
+
+            return Ok();
         }
     }
 }
