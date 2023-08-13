@@ -32,7 +32,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Book> GetBook(int id)
+        public ActionResult<Book> GetBook(string id)
         {
             var book = _context.Books.AsNoTracking().SingleOrDefault(b => b.Id == id);
             if(book == null)
@@ -42,10 +42,10 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet("{id}/content")]
-        public async Task<ActionResult> GetBookContent(string url)
+        public async Task<ActionResult> GetBookText(string textId)
         {
-            var byteBook = await _bookLoadingService.LoadBook(url);
-            Response.Headers.Add("Content-Disposition", $"inline; filename={url}.pdf");
+            var byteBook = await _bookLoadingService.LoadBook(textId);
+            Response.Headers.Add("Content-Disposition", $"inline; filename={textId}.pdf");
             Response.ContentType = "application/pdf";
             await Response.Body.WriteAsync(byteBook, 0, byteBook.Length);
 

@@ -12,8 +12,8 @@ using Persistance;
 namespace DigitalLibrary.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230810173230_FixedUser")]
-    partial class FixedUser
+    [Migration("20230813145859_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,6 +78,10 @@ namespace DigitalLibrary.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PhotoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -103,11 +107,8 @@ namespace DigitalLibrary.Migrations
 
             modelBuilder.Entity("Domain.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -121,7 +122,7 @@ namespace DigitalLibrary.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhotoUrl")
+                    b.Property<string>("PhotoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -132,17 +133,15 @@ namespace DigitalLibrary.Migrations
 
             modelBuilder.Entity("Domain.Entities.Book", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("BookTag")
                         .HasColumnType("int");
@@ -158,7 +157,7 @@ namespace DigitalLibrary.Migrations
                     b.Property<DateTime>("PublicationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("TextUrl")
+                    b.Property<string>("TextId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

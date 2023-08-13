@@ -11,5 +11,6 @@ namespace Domain.Auth
         public string LastName { get; set; }
         public IEnumerable<Book>? FavouriteBooks { get; set; }
         public string? Description { get; set; }
+        public string? PhotoId { get; set; }
     }
 }
