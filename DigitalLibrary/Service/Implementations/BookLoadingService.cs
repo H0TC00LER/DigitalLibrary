@@ -12,9 +12,13 @@ namespace Service.Implementations
             _booksFolderPath = configuration["BookContentPath"];
         }
 
-        public async Task<byte[]> LoadBook(string url)
+        public async Task<byte[]?> LoadBook(string url)
         {
-            var book = await File.ReadAllBytesAsync(GetBookFilePath(url));
+            var bookPath = GetBookFilePath(url);
+            if (!File.Exists(bookPath))
+                return null;
+
+            var book = await File.ReadAllBytesAsync(bookPath);
             return book;
         }
 

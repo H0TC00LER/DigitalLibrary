@@ -17,13 +17,6 @@ namespace DigitalLibrary.Controllers
             _bookLoadingService = bookLoadingService;
         }
 
-        [HttpGet("test")]
-        public ActionResult<string> DoTest()
-        {
-            Console.WriteLine(_context.Users.First().Id);
-            return _context.Users.First().Id;
-        }
-
         [HttpGet]
         public ActionResult<IEnumerable<Book>> GetAllBooks()
         {
@@ -41,10 +34,14 @@ namespace DigitalLibrary.Controllers
             return book;
         }
 
-        [HttpGet("{id}/content")]
+        [HttpGet("texts/{textId}")]
         public async Task<ActionResult> GetBookText(string textId)
         {
             var byteBook = await _bookLoadingService.LoadBook(textId);
+
+            if (byteBook == null)
+                return NotFound($"There is no book with id {textId}.");
+
             Response.Headers.Add("Content-Disposition", $"inline; filename={textId}.pdf");
             Response.ContentType = "application/pdf";
             await Response.Body.WriteAsync(byteBook, 0, byteBook.Length);
