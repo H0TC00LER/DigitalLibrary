@@ -1,7 +1,7 @@
 ﻿using DigitalLibrary.Filters;
-using Domain.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Domain.DataTransferObjects;
 
 namespace DigitalLibrary.Controllers
 {
@@ -15,7 +15,7 @@ namespace DigitalLibrary.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [ValidateModel]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts;
 
 namespace Service.Implementations
@@ -12,9 +13,9 @@ namespace Service.Implementations
             _booksFolderPath = configuration["BookContentPath"];
         }
 
-        public async Task<byte[]?> LoadBook(string url)
+        public async Task<byte[]?> LoadBookAsync(string id)
         {
-            var bookPath = GetBookFilePath(url);
+            var bookPath = GetBookFilePath(id);
             if (!File.Exists(bookPath))
                 return null;
 
@@ -22,12 +23,19 @@ namespace Service.Implementations
             return book;
         }
 
-        public string GetBookFilePath(string url)
+        public string GetBookFilePath(string id)
         {
-            var fileName = $"{url}.pdf";
+            var fileName = $"{id}.pdf";
             var bookFilePath = Path.Combine(_booksFolderPath, fileName);
 
             return bookFilePath;
+        }
+
+        public async Task SaveBookAsync(IFormFile file, string textId)
+        {
+            var filePath = GetBookFilePath(textId);
+
+            await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Service.Implementations
 {
@@ -32,6 +34,13 @@ namespace Service.Implementations
 
             var file = await File.ReadAllBytesAsync(imagePath);
             return file;
+        }
+
+        public async Task SavePhotoAsync(IFormFile file, string section, string photoId)
+        {
+            var filePath = Path.Combine(_folderPath, section, $"{photoId}.png");
+
+            await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
         }
     }
 }
