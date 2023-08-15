@@ -23,9 +23,12 @@ namespace Service.Implementations
 
         public async Task<byte[]?> GetPhotoAsync(string sectionName, string imageId)
         {
-            var imagePath = Path.Combine(_folderPath, sectionName, $"{imageId}.png");
+            string? imagePath = null;
+
             if (!File.Exists(imagePath))
-                return null;
+                imagePath = Path.Combine(_folderPath, sectionName, $"default.png");
+            else
+                imagePath = Path.Combine(_folderPath, sectionName, $"{imageId}.png");
 
             var file = await File.ReadAllBytesAsync(imagePath);
             return file;

@@ -13,45 +13,27 @@ namespace DigitalLibrary.Controllers
             _imageService = imageService;
         }
 
-        //DRY умер
-        [HttpGet("covers/{coverId}")]
-        public async Task<IActionResult> GetCover(string coverId)
+        [HttpGet("{section}/{imageId}")]
+        public async Task<IActionResult> GetImage(string section, string imageId)
         {
-            var cover = await _imageService.GetCoverAsync(coverId);
-
-            if(cover == null)
-                return NotFound($"There is no cover with id {coverId}.");
+            byte[]? image = null;
+            switch(section)
+            {
+                case "authorphotos":
+                    image = await _imageService.GetAuthorPhotoAsync(imageId);
+                    break;
+                case "userphotos":
+                    image = await _imageService.GetUserPhotoAsync(imageId);
+                    break;
+                case "covers":
+                    image = await _imageService.GetCoverAsync(imageId);
+                    break;
+                default:
+                    return NotFound($"There is no section named {section}.");
+            }
 
             Response.ContentType = "image/png";
-            await Response.Body.WriteAsync(cover, 0, cover.Length);
-
-            return Ok();
-        }
-
-        [HttpGet("userPhotos/{photoId}")]
-        public async Task<IActionResult> GetUserPhoto(string photoId)
-        {
-            var photo = await _imageService.GetUserPhotoAsync(photoId);
-
-            if (photo == null)
-                return NotFound($"There is no user photo with id {photoId}.");
-
-            Response.ContentType = "image/png";
-            await Response.Body.WriteAsync(photo, 0, photo.Length);
-
-            return Ok();
-        }
-
-        [HttpGet("authorPhotos/{photoId}")]
-        public async Task<IActionResult> GetAuthorPhoto(string photoId)
-        {
-            var photo = await _imageService.GetUserPhotoAsync(photoId);
-
-            if (photo == null)
-                return NotFound($"There is no author photo with id {photoId}.");
-
-            Response.ContentType = "image/png";
-            await Response.Body.WriteAsync(photo, 0, photo.Length);
+            await Response.Body.WriteAsync(image, 0, image.Length);
 
             return Ok();
         }
