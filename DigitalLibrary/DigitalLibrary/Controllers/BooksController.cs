@@ -1,5 +1,6 @@
 ﻿using DigitalLibrary.Filters;
 using Domain.DataTransferObjects;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Persistance;
 using Service.Contracts;
@@ -56,14 +57,29 @@ namespace DigitalLibrary.Controllers
         [ValidateModel]
         public async Task<IActionResult> CreateBook(BookForCreationDto book)
         {
+            var author = await _context.Authors.FindAsync(book.AuthorId);
+            if (author == null)
+                return NotFound($"There is no author with id {book.AuthorId}");
+
+            Book? bookModel = new Book
+            {
+                Title = book.Title,
+                BookTags = book.BookTags,
+                Description = book.Description,
+                PublicationDate = book.PublicationDate,
+                Author = author,
+            };
+
             var textId = Guid.NewGuid().ToString();
             await _bookLoadingService.SaveBookAsync(book.PdfText, textId);
-            //Сохранить в дб айдишники!!!!!!!!!!!!!!!
-            //Отрефакторить сохранятель картинок!!!!!!
+            bookModel.TextId = textId;
 
             var imageId = Guid.NewGuid().ToString();
             await _imageLoaderService.SavePhotoAsync(book.CoverImage, "AuthorPhotos", imageId);
+            bookModel.CoverUrl = imageId;
 
+            await _context.Books.AddAsync(bookModel);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
