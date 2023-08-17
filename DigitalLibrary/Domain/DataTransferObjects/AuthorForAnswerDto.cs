@@ -3,8 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DataTransferObjects
 {
-    public class AuthorDto
+    public class AuthorForAnswerDto
     {
+        [Required]
+        public string Id { get; set; }
+
         [Required]
         [MaxLength(30)]
         public string FirstName { get; set; }

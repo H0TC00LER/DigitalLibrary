@@ -23,13 +23,14 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AuthorDto>>> GetAllAuthors()
+        public async Task<ActionResult<List<AuthorForAnswerDto>>> GetAllAuthors()
         {
             var authors = _context
                 .Authors
                 .AsNoTracking()
-                .Select(a => new AuthorDto
+                .Select(a => new AuthorForAnswerDto
             {
+                Id = a.Id,
                 Description = a.Description,
                 FirstName = a.FirstName,
                 LastName = a.LastName,
@@ -41,7 +42,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorDto>> GetAuthor(string id)
+        public async Task<ActionResult<AuthorForAnswerDto>> GetAuthor(string id)
         {
             var author = await _context
                 .Authors
@@ -51,13 +52,14 @@ namespace DigitalLibrary.Controllers
             if(author == null)
                 return NotFound($"There is no author with id {id}");
 
-            var authorDto = new AuthorDto
+            var authorDto = new AuthorForAnswerDto
             {
+                Id = author.Id,
                 Description = author.Description,
                 FirstName = author.FirstName,
                 LastName = author.LastName,
                 PhotoId = author.PhotoId,
-                WrittenBooksIds = author.WrittenBooks.Select(b => b.Id)
+                WrittenBooksIds = author.WrittenBooks == null ? null : author.WrittenBooks.Select(b => b.Id)
             };
 
             return authorDto;

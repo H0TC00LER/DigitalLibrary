@@ -39,6 +39,12 @@ namespace DigitalLibrary.Controllers
         //    return book;
         //}
 
+        [HttpGet]
+        public ActionResult GetBookByAuthorId(string authorId)
+        {
+            return Ok();
+        }
+
         [HttpGet("texts/{textId}")]
         public async Task<ActionResult> GetBookText(string textId)
         {
