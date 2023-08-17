@@ -19,9 +19,9 @@ namespace Service.Implementations
             string? imagePath = null;
 
             if (!File.Exists(imagePath))
-                imagePath = GetPath(section, $"default.png");
+                imagePath = GetPath(section, $"default");
             else
-                imagePath = GetPath(section, $"{imageId}.png");
+                imagePath = GetPath(section, $"{imageId}");
 
             var file = await File.ReadAllBytesAsync(imagePath);
             return file;
@@ -29,14 +29,14 @@ namespace Service.Implementations
 
         public async Task SavePhotoAsync(IFormFile file, Section section, string photoId)
         {
-            var filePath = GetPath(section, $"{photoId}.png");
+            var filePath = GetPath(section, $"{photoId}");
 
             await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
         }
 
         public void DeletePhoto(Section section, string photoId)
         {
-            var filePath = GetPath(section, $"{photoId}.png");
+            var filePath = GetPath(section, $"{photoId}");
             if (!File.Exists(filePath))
                 throw new Exception($"There is no photo with id {photoId}");
 
@@ -45,7 +45,10 @@ namespace Service.Implementations
 
         public async Task ChangePhotoAsync(IFormFile file, Section section, string photoId)
         {
-            var filePath = GetPath(section, $"{photoId}.png");
+            if (file == null)
+                throw new Exception("File was null.");
+
+            var filePath = GetPath(section, $"{photoId}");
             if(!File.Exists(filePath))
                 throw new Exception($"There is no photo with id {photoId}");
 

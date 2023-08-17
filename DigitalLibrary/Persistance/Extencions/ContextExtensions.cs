@@ -13,7 +13,7 @@ namespace Persistance.Extencions
 
             var writtenBooks = await context
                 .Books
-                .Where(b => author.WrittenBooksIds.Contains(b.Id))
+                .Where(b => author.WrittenBooksIds != null && author.WrittenBooksIds.Contains(b.Id))
                 .ToListAsync();
 
             authorToUpdate.Description = author.Description;
