@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Service.Contracts;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Service.Implementations
 {
@@ -14,33 +14,49 @@ namespace Service.Implementations
             _folderPath = configuration["ImagesFolderPath"];
         }
 
-        public async Task<byte[]> GetAuthorPhotoAsync(string photoId)
-            => await GetPhotoAsync("AuthorPhotos", photoId);
-
-        public async Task<byte[]> GetCoverAsync(string coverId)
-            => await GetPhotoAsync("Covers", coverId);
-
-        public async Task<byte[]> GetUserPhotoAsync(string photoId)
-            => await GetPhotoAsync("UserPhotos", photoId);
-
-        public async Task<byte[]?> GetPhotoAsync(string sectionName, string imageId)
+        public async Task<byte[]?> GetPhotoAsync(Section section, string imageId)
         {
             string? imagePath = null;
 
             if (!File.Exists(imagePath))
-                imagePath = Path.Combine(_folderPath, sectionName, $"default.png");
+                imagePath = GetPath(section, $"default.png");
             else
-                imagePath = Path.Combine(_folderPath, sectionName, $"{imageId}.png");
+                imagePath = GetPath(section, $"{imageId}.png");
 
             var file = await File.ReadAllBytesAsync(imagePath);
             return file;
         }
 
-        public async Task SavePhotoAsync(IFormFile file, string section, string photoId)
+        public async Task SavePhotoAsync(IFormFile file, Section section, string photoId)
         {
-            var filePath = Path.Combine(_folderPath, section, $"{photoId}.png");
+            var filePath = GetPath(section, $"{photoId}.png");
 
             await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
+        }
+
+        public void DeletePhoto(Section section, string photoId)
+        {
+            var filePath = GetPath(section, $"{photoId}.png");
+            if (!File.Exists(filePath))
+                throw new Exception($"There is no photo with id {photoId}");
+
+            File.Delete(filePath);
+        }
+
+        public async Task ChangePhotoAsync(IFormFile file, Section section, string photoId)
+        {
+            var filePath = GetPath(section, $"{photoId}.png");
+            if(!File.Exists(filePath))
+                throw new Exception($"There is no photo with id {photoId}");
+
+            await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
+        }
+
+        private string GetPath(Section section, string photoId)
+        {
+            var stringSection = section.ToString();
+            var filePath = Path.Combine(_folderPath, stringSection, $"{photoId}.png");
+            return filePath;
         }
     }
 }

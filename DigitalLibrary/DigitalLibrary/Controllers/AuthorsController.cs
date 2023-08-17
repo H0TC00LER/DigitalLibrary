@@ -1,8 +1,11 @@
-﻿using Domain.DataTransferObjects;
+﻿using DigitalLibrary.Filters;
+using Domain.DataTransferObjects;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
+using Persistance.Extencions;
 using Service.Contracts;
 
 namespace DigitalLibrary.Controllers
@@ -61,6 +64,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> PostAuthor(AuthorForRequestDto authorDto)
         {
             var writtenBooks = await _context
@@ -68,18 +72,21 @@ namespace DigitalLibrary.Controllers
                 .Where(b => authorDto.WrittenBooksIds.Contains(b.Id))
                 .ToListAsync();
 
+            var authorId = Guid.NewGuid().ToString();
+
             var author = new Author
             {
                 Description = authorDto.Description,
                 FirstName = authorDto.FirstName,
                 LastName = authorDto.LastName,
                 WrittenBooks = writtenBooks,
+                Id = authorId,
             };
 
             if(authorDto.Image != null)
             {
                 var imageId = Guid.NewGuid().ToString();
-                await _imageService.SavePhotoAsync(authorDto.Image, "AuthorPhotos", imageId);
+                await _imageService.SavePhotoAsync(authorDto.Image, Section.AuthorPhotos, imageId);
 
                 author.PhotoId = imageId;
             }
@@ -91,13 +98,22 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> ChangeAuthor(string id, AuthorDto author)
+        [ValidateModel]
+        public async Task<IActionResult> UpdateAuthor(string id, AuthorForRequestDto author)
         {
+            var authorToChange = await _context.Authors.FindAsync(id);
+            if (authorToChange == null)
+                return NotFound($"There is no author with id {id}.");
+
+            await _context.UpdateAuthorAsync(id, author);
+
+            await _imageService.ChangePhotoAsync(author.Image, Section.AuthorPhotos, authorToChange.PhotoId);
+
             return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthot(string id)
+        public async Task<IActionResult> DeleteAuthor(string id)
         {
             return Ok();
         }

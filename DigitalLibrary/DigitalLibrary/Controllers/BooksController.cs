@@ -1,6 +1,7 @@
 ﻿using DigitalLibrary.Filters;
 using Domain.DataTransferObjects;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Persistance;
 using Service.Contracts;
@@ -75,7 +76,7 @@ namespace DigitalLibrary.Controllers
             bookModel.TextId = textId;
 
             var imageId = Guid.NewGuid().ToString();
-            await _imageLoaderService.SavePhotoAsync(book.CoverImage, "AuthorPhotos", imageId);
+            await _imageLoaderService.SavePhotoAsync(book.CoverImage, Section.AuthorPhotos, imageId);
             bookModel.CoverUrl = imageId;
 
             await _context.Books.AddAsync(bookModel);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
 namespace DigitalLibrary.Controllers
@@ -20,13 +21,13 @@ namespace DigitalLibrary.Controllers
             switch(section)
             {
                 case "authorphotos":
-                    image = await _imageService.GetAuthorPhotoAsync(imageId);
+                    image = await _imageService.GetPhotoAsync(Section.AuthorPhotos, imageId);
                     break;
                 case "userphotos":
-                    image = await _imageService.GetUserPhotoAsync(imageId);
+                    image = await _imageService.GetPhotoAsync(Section.UserPhotos, imageId);
                     break;
                 case "covers":
-                    image = await _imageService.GetCoverAsync(imageId);
+                    image = await _imageService.GetPhotoAsync(Section.Covers, imageId);
                     break;
                 default:
                     return NotFound($"There is no section named {section}.");
