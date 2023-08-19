@@ -3,6 +3,7 @@ using Domain.DataTransferObjects;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Service.Contracts;
 
@@ -12,37 +13,42 @@ namespace DigitalLibrary.Controllers
     public class BooksController : Controller
     {
         private readonly AppDbContext _context;
-        private readonly IBookLoadingService _bookLoadingService;
-        private readonly IImageLoaderService _imageLoaderService;
+        private readonly IBookLoadingService _bookService;
+        private readonly IImageLoaderService _imageService;
 
-        public BooksController(AppDbContext context, IBookLoadingService bookLoadingService, IImageLoaderService imageLoaderService)
+        public BooksController(AppDbContext context, IBookLoadingService bookService, IImageLoaderService imageService)
         {
             _context = context;
-            _bookLoadingService = bookLoadingService;
-            _imageLoaderService = imageLoaderService;
+            _bookService = bookService;
+            _imageService = imageService;
         }
 
-        //[HttpGet]
-        //public ActionResult<IEnumerable<Book>> GetAllBooks()
-        //{
-        //    var books = _context.Books.AsNoTracking().ToList();
-        //    return books;
-        //}
-
-        //[HttpGet("{id}")]
-        //public ActionResult<Book> GetBook(string id)
-        //{
-        //    var book = _context.Books.AsNoTracking().SingleOrDefault(b => b.Id == id);
-        //    if(book == null)
-        //        return NotFound($"There's no book with id {id}");
-
-        //    return book;
-        //}
-
         [HttpGet]
-        public ActionResult GetBookByAuthorId(string authorId)
+        public async Task<ActionResult<IEnumerable<BookForAnswerDto>>> GetAllBooks()
         {
-            return Ok();
+            var bookModels = await _context
+                .Books
+                .AsNoTracking()
+                .Select(b => new BookForAnswerDto(b))
+                .ToListAsync();
+
+            return bookModels;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BookForAnswerDto>> GetBookById(string id)
+        {
+            var bookModel = await _context
+                .Books
+                .AsNoTracking()
+                .SingleOrDefaultAsync(b => b.Id == id);
+
+            if (bookModel == null)
+                return NotFound($"There's no book with id {id}.");
+
+            var bookDto = new BookForAnswerDto(bookModel);
+
+            return bookDto;
         }
 
         [HttpGet("texts/{textId}")]
@@ -60,7 +66,7 @@ namespace DigitalLibrary.Controllers
             return Ok();
         }
 
-        [HttpPost("texts/save")]
+        [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> CreateBook(BookForCreationDto book)
         {
@@ -68,13 +74,15 @@ namespace DigitalLibrary.Controllers
             if (author == null)
                 return NotFound($"There is no author with id {book.AuthorId}");
 
-            Book? bookModel = new Book
+            var bookId = Guid.NewGuid().ToString();
+            var bookModel = new Book
             {
+                Id = bookId,
                 Title = book.Title,
                 BookTags = book.BookTags,
                 Description = book.Description,
                 PublicationDate = book.PublicationDate,
-                Author = author,
+                Author = author
             };
 
             var textId = Guid.NewGuid().ToString();
@@ -82,10 +90,26 @@ namespace DigitalLibrary.Controllers
             bookModel.TextId = textId;
 
             var imageId = Guid.NewGuid().ToString();
-            await _imageLoaderService.SavePhotoAsync(book.CoverImage, Section.AuthorPhotos, imageId);
+            await _imageService.SavePhotoAsync(book.CoverImage, Section.AuthorPhotos, imageId);
             bookModel.CoverUrl = imageId;
 
             await _context.Books.AddAsync(bookModel);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(string id)
+        {
+            var bookToDelete = await _context.Books.FindAsync(id);
+            if (bookToDelete == null)
+                return NotFound($"There is no book with id {id}.");
+
+            _imageService.DeletePhoto(Section.Covers, bookToDelete.CoverUrl);
+            //_bookLoadingService.De
+
+            _context.Books.Remove(bookToDelete);
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -28,15 +28,7 @@ namespace DigitalLibrary.Controllers
             var authors = _context
                 .Authors
                 .AsNoTracking()
-                .Select(a => new AuthorForAnswerDto
-            {
-                Id = a.Id,
-                Description = a.Description,
-                FirstName = a.FirstName,
-                LastName = a.LastName,
-                PhotoId = a.PhotoId,
-                WrittenBooksIds = a.WrittenBooks.Select(b => b.Id)
-            });
+                .Select(a => new AuthorForAnswerDto(a));
 
             return await authors.ToListAsync();
         }
@@ -52,15 +44,7 @@ namespace DigitalLibrary.Controllers
             if(author == null)
                 return NotFound($"There is no author with id {id}");
 
-            var authorDto = new AuthorForAnswerDto
-            {
-                Id = author.Id,
-                Description = author.Description,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                PhotoId = author.PhotoId,
-                WrittenBooksIds = author.WrittenBooks == null ? null : author.WrittenBooks.Select(b => b.Id)
-            };
+            var authorDto = new AuthorForAnswerDto(author);
 
             return authorDto;
         }

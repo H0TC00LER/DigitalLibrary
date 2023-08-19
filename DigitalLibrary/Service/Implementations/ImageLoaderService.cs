@@ -16,12 +16,10 @@ namespace Service.Implementations
 
         public async Task<byte[]?> GetPhotoAsync(Section section, string imageId)
         {
-            string? imagePath = null;
+            string imagePath = GetPath(section, $"{imageId}");
 
             if (!File.Exists(imagePath))
                 imagePath = GetPath(section, $"default");
-            else
-                imagePath = GetPath(section, $"{imageId}");
 
             var file = await File.ReadAllBytesAsync(imagePath);
             return file;
