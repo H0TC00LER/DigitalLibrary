@@ -1,11 +1,13 @@
 ﻿using DigitalLibrary.Filters;
-using Domain.DataTransferObjects;
+using Domain.DataTransferObjects.DtoForRequest;
+using Domain.DataTransferObjects.DtoForAnswer;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Service.Contracts;
+using Persistance.Extencions;
 
 namespace DigitalLibrary.Controllers
 {
@@ -54,7 +56,7 @@ namespace DigitalLibrary.Controllers
         [HttpGet("texts/{textId}")]
         public async Task<ActionResult> GetBookText(string textId)
         {
-            var byteBook = await _bookLoadingService.LoadBookAsync(textId);
+            var byteBook = await _bookService.LoadBookAsync(textId);
 
             if (byteBook == null)
                 return NotFound($"There is no book with id {textId}.");
@@ -86,7 +88,7 @@ namespace DigitalLibrary.Controllers
             };
 
             var textId = Guid.NewGuid().ToString();
-            await _bookLoadingService.SaveBookAsync(book.PdfText, textId);
+            await _bookService.SaveBookAsync(book.PdfText, textId);
             bookModel.TextId = textId;
 
             var imageId = Guid.NewGuid().ToString();
@@ -107,9 +109,40 @@ namespace DigitalLibrary.Controllers
                 return NotFound($"There is no book with id {id}.");
 
             _imageService.DeletePhoto(Section.Covers, bookToDelete.CoverUrl);
-            //_bookLoadingService.De
+            _bookService.DeleteBook(bookToDelete.TextId);
 
             _context.Books.Remove(bookToDelete);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdateBook(string id, BookForUpdateDto book)
+        {
+            var bookToChange = await _context.Books.FindAsync(id);
+            if (bookToChange == null)
+                return NotFound($"There is no book with id {id}.");
+
+            if (book.CoverImage != null)
+            {
+                if (bookToChange.CoverUrl == null)
+                {
+                    var imageId = Guid.NewGuid().ToString();
+                    await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
+                    bookToChange.CoverUrl = imageId;
+                }
+                else
+                    await _imageService.ChangePhotoAsync(book.CoverImage, Section.Covers, bookToChange.CoverUrl);
+            }
+
+            if(book.PdfText != null)
+            {
+                await _bookService.ChangeBookAsync(book.PdfText, bookToChange.TextId);
+            }
+
+            await _context.UpdateBookAsync(id, book);
             await _context.SaveChangesAsync();
 
             return Ok();

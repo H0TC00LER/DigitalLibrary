@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.DataTransferObjects
+namespace Domain.DataTransferObjects.DtoForRequest
 {
     public class AuthorForRequestDto
     {
@@ -20,6 +20,6 @@ namespace Domain.DataTransferObjects
         public IEnumerable<string>? WrittenBooksIds { get; set; }
 
         [DataType(DataType.Upload)]
-        public IFormFile? Image {  get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

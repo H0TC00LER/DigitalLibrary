@@ -1,4 +1,5 @@
-﻿using Domain.DataTransferObjects;
+﻿using Domain.DataTransferObjects.DtoForRequest;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistance.Extencions
@@ -20,6 +21,21 @@ namespace Persistance.Extencions
             authorToUpdate.WrittenBooks = writtenBooks;
             authorToUpdate.FirstName = author.FirstName;
             authorToUpdate.LastName = author.LastName;
+        }
+
+        public static async Task UpdateBookAsync(this AppDbContext context, string id, BookForUpdateDto book)
+        {
+            var bookToUpdate = await context.Books.FindAsync(id);
+            if(bookToUpdate == null)
+                throw new Exception($"There is no book with id {id}.");
+
+            var author = await context.Authors.FindAsync(book.AuthorId);
+
+            bookToUpdate.Author = author;
+            bookToUpdate.Description = book.Description;
+            bookToUpdate.PublicationDate = book.PublicationDate;
+            bookToUpdate.BookTags = book.BookTags;
+            bookToUpdate.Title = book.Title;
         }
     }
 }

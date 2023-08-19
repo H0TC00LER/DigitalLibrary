@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.DataTransferObjects
+namespace Domain.DataTransferObjects.DtoForAnswer
 {
     public class AuthorForAnswerDto
     {

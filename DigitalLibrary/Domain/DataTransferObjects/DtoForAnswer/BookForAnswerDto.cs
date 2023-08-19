@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using System;
-namespace Domain.DataTransferObjects
+namespace Domain.DataTransferObjects.DtoForAnswer
 {
     public class BookForAnswerDto
     {

@@ -2,26 +2,26 @@
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain.DataTransferObjects
+namespace Domain.DataTransferObjects.DtoForRequest
 {
     public class BookForCreationDto
     {
-        [Required(ErrorMessage = "Type the book title.")]
+        [Required]
         public string Title { get; set; }
 
         public DateTime? PublicationDate { get; set; }
 
-        [Required(ErrorMessage = "Description is required.")]
+        [Required]
         [MaxLength(2000)]
         public string Description { get; set; }
 
         [DataType(DataType.Upload)]
         public IFormFile CoverImage { get; set; }
 
-        [Required(ErrorMessage = "AuthorId is required.")]
+        [Required]
         public string AuthorId { get; set; }
 
-        [Required(ErrorMessage = "Book text is required.")]
+        [Required]
         [DataType(DataType.Upload)]
         public IFormFile PdfText { get; set; }
 

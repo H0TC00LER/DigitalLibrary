@@ -1,5 +1,6 @@
 ﻿using DigitalLibrary.Filters;
-using Domain.DataTransferObjects;
+using Domain.DataTransferObjects.DtoForAnswer;
+using Domain.DataTransferObjects.DtoForRequest;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
