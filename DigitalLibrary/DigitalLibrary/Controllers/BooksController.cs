@@ -92,13 +92,17 @@ namespace DigitalLibrary.Controllers
             bookModel.TextId = textId;
 
             var imageId = Guid.NewGuid().ToString();
-            await _imageService.SavePhotoAsync(book.CoverImage, Section.AuthorPhotos, imageId);
+            await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
             bookModel.CoverUrl = imageId;
+
+            if(author.WrittenBooks == null)
+                author.WrittenBooks = new List<Book>();
+            author.WrittenBooks.Concat(new[] { bookModel });
 
             await _context.Books.AddAsync(bookModel);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return CreatedAtAction(nameof(CreateBook), bookModel);
         }
 
         [HttpDelete("{id}")]
