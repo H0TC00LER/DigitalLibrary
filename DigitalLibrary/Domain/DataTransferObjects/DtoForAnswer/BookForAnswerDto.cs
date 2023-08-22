@@ -5,14 +5,12 @@ namespace Domain.DataTransferObjects.DtoForAnswer
 {
     public class BookForAnswerDto
     {
-        public BookForAnswerDto() { }
-
         public BookForAnswerDto(Book book)
         {
             Id = book.Id;
-            AuthorId = book.Author == null ? null : book.Author.Id;
+            AuthorId = book.AuthorId;
             BookTags = book.BookTags;
-            CoverUrl = book.CoverUrl;
+            CoverUrl = book.CoverId;
             Description = book.Description;
             PublicationDate = book.PublicationDate;
             TextId = book.TextId;

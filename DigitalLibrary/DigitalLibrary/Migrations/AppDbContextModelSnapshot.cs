@@ -135,12 +135,14 @@ namespace DigitalLibrary.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AuthorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BookTags")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CoverUrl")
+                    b.Property<string>("CoverId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -308,7 +310,9 @@ namespace DigitalLibrary.Migrations
 
                     b.HasOne("Domain.Entities.Author", "Author")
                         .WithMany("WrittenBooks")
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
                 });

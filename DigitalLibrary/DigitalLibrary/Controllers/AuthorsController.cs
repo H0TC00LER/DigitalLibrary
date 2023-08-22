@@ -28,7 +28,7 @@ namespace DigitalLibrary.Controllers
         {
             var authors = _context
                 .Authors
-                .AsNoTracking()
+                .Include(a => a.WrittenBooks)
                 .Select(a => new AuthorForAnswerDto(a));
 
             return await authors.ToListAsync();
@@ -52,13 +52,8 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> PostAuthor(AuthorForRequestDto authorDto)
+        public async Task<IActionResult> PostAuthor(AuthorForCreationDto authorDto)
         {
-            var writtenBooks = await _context
-                .Books
-                .Where(b => authorDto.WrittenBooksIds != null && authorDto.WrittenBooksIds.Contains(b.Id))
-                .ToListAsync();
-
             var authorId = Guid.NewGuid().ToString();
 
             var author = new Author
@@ -66,7 +61,6 @@ namespace DigitalLibrary.Controllers
                 Description = authorDto.Description,
                 FirstName = authorDto.FirstName,
                 LastName = authorDto.LastName,
-                WrittenBooks = writtenBooks,
                 Id = authorId,
             };
 
@@ -86,7 +80,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateAuthor(string id, AuthorForRequestDto author)
+        public async Task<IActionResult> UpdateAuthor(string id, AuthorForCreationDto author)
         {
             var authorToChange = await _context.Authors.FindAsync(id);
             if (authorToChange == null)
@@ -117,7 +111,8 @@ namespace DigitalLibrary.Controllers
             if (authorToDelete == null)
                 return NotFound($"There is no author with id {id}.");
 
-            _imageService.DeletePhoto(Section.AuthorPhotos, authorToDelete.PhotoId);
+            if(authorToDelete.PhotoId != null)
+                _imageService.DeletePhoto(Section.AuthorPhotos, authorToDelete.PhotoId);
 
             _context.Authors.Remove(authorToDelete);
             await _context.SaveChangesAsync();

@@ -72,7 +72,7 @@ namespace DigitalLibrary.Controllers
         [ValidateModel]
         public async Task<IActionResult> CreateBook(BookForCreationDto book)
         {
-            var author = await _context.Authors.FindAsync(book.AuthorId);
+            var author = await _context.Authors.Include(a => a.WrittenBooks).SingleOrDefaultAsync(a => a.Id == book.AuthorId);
             if (author == null)
                 return NotFound($"There is no author with id {book.AuthorId}");
 
@@ -91,18 +91,19 @@ namespace DigitalLibrary.Controllers
             await _bookService.SaveBookAsync(book.PdfText, textId);
             bookModel.TextId = textId;
 
-            var imageId = Guid.NewGuid().ToString();
-            await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
-            bookModel.CoverUrl = imageId;
-
-            if(author.WrittenBooks == null)
-                author.WrittenBooks = new List<Book>();
-            author.WrittenBooks.Concat(new[] { bookModel });
+            if(book.CoverImage != null)
+            {
+                var imageId = Guid.NewGuid().ToString();
+                await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
+                bookModel.CoverId = imageId;
+            }    
+            
+            author.WrittenBooks.Add(bookModel);
 
             await _context.Books.AddAsync(bookModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(CreateBook), bookModel);
+            return CreatedAtAction(nameof(CreateBook), new BookForAnswerDto(bookModel));
         }
 
         [HttpDelete("{id}")]
@@ -112,7 +113,7 @@ namespace DigitalLibrary.Controllers
             if (bookToDelete == null)
                 return NotFound($"There is no book with id {id}.");
 
-            _imageService.DeletePhoto(Section.Covers, bookToDelete.CoverUrl);
+            _imageService.DeletePhoto(Section.Covers, bookToDelete.CoverId);
             _bookService.DeleteBook(bookToDelete.TextId);
 
             _context.Books.Remove(bookToDelete);
@@ -131,14 +132,14 @@ namespace DigitalLibrary.Controllers
 
             if (book.CoverImage != null)
             {
-                if (bookToChange.CoverUrl == null)
+                if (bookToChange.CoverId == null)
                 {
                     var imageId = Guid.NewGuid().ToString();
                     await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
-                    bookToChange.CoverUrl = imageId;
+                    bookToChange.CoverId = imageId;
                 }
                 else
-                    await _imageService.ChangePhotoAsync(book.CoverImage, Section.Covers, bookToChange.CoverUrl);
+                    await _imageService.ChangePhotoAsync(book.CoverImage, Section.Covers, bookToChange.CoverId);
             }
 
             if(book.PdfText != null)

@@ -6,22 +6,18 @@ namespace Domain.DataTransferObjects.DtoForRequest
 {
     public class BookForCreationDto
     {
-        [Required]
         public string Title { get; set; }
 
         public DateTime? PublicationDate { get; set; }
 
-        [Required]
         [MaxLength(2000)]
         public string Description { get; set; }
 
         [DataType(DataType.Upload)]
-        public IFormFile CoverImage { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
-        [Required]
         public string AuthorId { get; set; }
 
-        [Required]
         [DataType(DataType.Upload)]
         public IFormFile PdfText { get; set; }
 

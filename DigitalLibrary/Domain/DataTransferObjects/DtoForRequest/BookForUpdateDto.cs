@@ -9,6 +9,7 @@ namespace Domain.DataTransferObjects.DtoForRequest
         [Required]
         public string Title { get; set; }
 
+        [Required]
         public DateTime? PublicationDate { get; set; }
 
         [Required]
@@ -16,13 +17,13 @@ namespace Domain.DataTransferObjects.DtoForRequest
         public string Description { get; set; }
 
         [DataType(DataType.Upload)]
-        public IFormFile CoverImage { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
         [Required]
         public string AuthorId { get; set; }
 
         [DataType(DataType.Upload)]
-        public IFormFile? PdfText { get; set; }
+        public IFormFile PdfText { get; set; }
 
         public List<BookTag>? BookTags { get; set; }
     }

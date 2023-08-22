@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.DataTransferObjects.DtoForAnswer
 {
@@ -12,7 +11,7 @@ namespace Domain.DataTransferObjects.DtoForAnswer
             FirstName = author.FirstName;
             LastName = author.LastName;
             PhotoId = author.PhotoId;
-            WrittenBooksIds = author.WrittenBooks == null ? null : author.WrittenBooks.Select(b => b.Id);
+            WrittenBooksIds = author.WrittenBooks.Select(b => b.Id);
         }
 
         public string Id { get; set; }
