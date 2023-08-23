@@ -97,8 +97,6 @@ namespace DigitalLibrary.Controllers
                 await _imageService.SavePhotoAsync(book.CoverImage, Section.Covers, imageId);
                 bookModel.CoverId = imageId;
             }    
-            
-            author.WrittenBooks.Add(bookModel);
 
             await _context.Books.AddAsync(bookModel);
             await _context.SaveChangesAsync();
@@ -151,6 +149,12 @@ namespace DigitalLibrary.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet("search")]
+        public IActionResult Search()
+        {
+
         }
     }
 }

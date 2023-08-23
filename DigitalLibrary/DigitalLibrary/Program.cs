@@ -20,6 +20,7 @@ builder.Services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IBookLoadingService>(x => new BookLoadingService(builder.Configuration));
 builder.Services.AddScoped<IImageLoaderService>(x => new ImageLoaderService(builder.Configuration));
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 builder.Services.AddAuthentication();
 
