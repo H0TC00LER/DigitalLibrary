@@ -5,6 +5,6 @@ namespace Service.Contracts
 {
     public interface ISearchService
     {
-        public Task<List<Book>> SearchAsync(string searchWord, List<BookTag> bookTags, string sortBy);
+        public IEnumerable<Book> Search(string searchWord, List<BookTag> bookTags, string sortBy, int page, int limit);
     }
 }

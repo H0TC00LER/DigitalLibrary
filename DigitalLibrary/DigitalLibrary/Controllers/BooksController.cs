@@ -17,12 +17,17 @@ namespace DigitalLibrary.Controllers
         private readonly AppDbContext _context;
         private readonly IBookLoadingService _bookService;
         private readonly IImageLoaderService _imageService;
+        private readonly ISearchService _searchService;
 
-        public BooksController(AppDbContext context, IBookLoadingService bookService, IImageLoaderService imageService)
+        public BooksController(AppDbContext context,
+            IBookLoadingService bookService,
+            IImageLoaderService imageService,
+            ISearchService searchService)
         {
             _context = context;
             _bookService = bookService;
             _imageService = imageService;
+            _searchService = searchService;
         }
 
         [HttpGet]
@@ -149,12 +154,6 @@ namespace DigitalLibrary.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
-        }
-
-        [HttpGet("search")]
-        public IActionResult Search()
-        {
-
         }
     }
 }
