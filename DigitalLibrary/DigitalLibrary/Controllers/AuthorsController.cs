@@ -52,7 +52,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> PostAuthor(AuthorForCreationDto authorDto)
+        public async Task<IActionResult> PostAuthor([FromBody] AuthorForCreationDto authorDto)
         {
             var authorId = Guid.NewGuid().ToString();
 
@@ -80,7 +80,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateAuthor(string id, AuthorForCreationDto author)
+        public async Task<IActionResult> UpdateAuthor(string id, [FromBody] AuthorForCreationDto author)
         {
             var authorToChange = await _context.Authors.FindAsync(id);
             if (authorToChange == null)

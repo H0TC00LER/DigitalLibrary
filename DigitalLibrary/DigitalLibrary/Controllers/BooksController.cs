@@ -75,7 +75,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> CreateBook(BookForCreationDto book)
+        public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
             var author = await _context.Authors.Include(a => a.WrittenBooks).SingleOrDefaultAsync(a => a.Id == book.AuthorId);
             if (author == null)
@@ -127,7 +127,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateBook(string id, BookForUpdateDto book)
+        public async Task<IActionResult> UpdateBook(string id, [FromBody] BookForUpdateDto book)
         {
             var bookToChange = await _context.Books.FindAsync(id);
             if (bookToChange == null)
