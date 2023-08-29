@@ -3,6 +3,7 @@ using Domain.DataTransferObjects.DtoForAnswer;
 using Domain.DataTransferObjects.DtoForRequest;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
@@ -52,6 +53,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost]
         [ValidateModel]
+        [Authorize]
         public async Task<IActionResult> PostAuthor([FromBody] AuthorForCreationDto authorDto)
         {
             var authorId = Guid.NewGuid().ToString();
@@ -80,6 +82,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize]
         public async Task<IActionResult> UpdateAuthor(string id, [FromBody] AuthorForCreationDto author)
         {
             var authorToChange = await _context.Authors.FindAsync(id);
@@ -105,6 +108,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAuthor(string id)
         {
             var authorToDelete = await _context.Authors.FindAsync(id);

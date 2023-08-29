@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistance;
 using Service.Contracts;
 using Persistance.Extencions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DigitalLibrary.Controllers
 {
@@ -59,6 +60,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet("texts/{textId}")]
+        [Authorize]
         public async Task<ActionResult> GetBookText(string textId)
         {
             var byteBook = await _bookService.LoadBookAsync(textId);
@@ -75,6 +77,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost]
         [ValidateModel]
+        [Authorize]
         public async Task<IActionResult> CreateBook([FromBody] BookForCreationDto book)
         {
             var author = await _context.Authors.Include(a => a.WrittenBooks).SingleOrDefaultAsync(a => a.Id == book.AuthorId);
@@ -110,6 +113,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBook(string id)
         {
             var bookToDelete = await _context.Books.FindAsync(id);
@@ -127,6 +131,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPut("{id}")]
         [ValidateModel]
+        [Authorize]
         public async Task<IActionResult> UpdateBook(string id, [FromBody] BookForUpdateDto book)
         {
             var bookToChange = await _context.Books.FindAsync(id);
