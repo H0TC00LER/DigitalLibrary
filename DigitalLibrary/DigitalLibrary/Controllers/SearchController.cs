@@ -16,7 +16,7 @@ namespace DigitalLibrary.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BookForAnswerDto>> Search([FromBody] SearchQueryDto searchQuery)
+        public ActionResult<IEnumerable<BookForAnswerDto>> Search([FromForm] SearchQueryDto searchQuery)
         {
             var searchResult = _searchService.Search(
                 searchQuery.SearchWord,

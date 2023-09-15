@@ -43,6 +43,17 @@ namespace DigitalLibrary.Controllers
             return bookModels;
         }
 
+        [HttpGet("mainPage")]
+        public async Task<ActionResult<IEnumerable<BookForAnswerDto>>> GetBooksForMainPage()
+        {
+            var bookModels = await _context
+                .Books
+                .Take(10)
+                .Select(b => new BookForAnswerDto(b))
+                .ToListAsync();
+            return bookModels;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BookForAnswerDto>> GetBookById(string id)
         {
@@ -160,5 +171,7 @@ namespace DigitalLibrary.Controllers
 
             return Ok();
         }
+        
+        
     }
 }

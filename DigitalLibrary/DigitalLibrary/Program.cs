@@ -15,7 +15,10 @@ builder.Services.ConfigureSwaggerGen(); //ext
 
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services
-    .AddDbContext<AppDbContext>(options => options.UseSqlServer(connString, b => b.MigrationsAssembly("DigitalLibrary")));
+    .AddDbContext<AppDbContext>(
+        options => options.UseNpgsql(
+            connString, 
+            b => b.MigrationsAssembly("DigitalLibrary")));
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IBookLoadingService>(x => new BookLoadingService(builder.Configuration));
