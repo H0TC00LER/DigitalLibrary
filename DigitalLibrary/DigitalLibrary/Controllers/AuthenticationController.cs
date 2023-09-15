@@ -17,7 +17,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost("register")]
         [ValidateModel]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        public async Task<IActionResult> RegisterUser([FromForm] UserForRegistrationDto userForRegistration)
         {
             var result = await _authenticationService.RegisterUser(userForRegistration);
             if (!result.Succeeded)
@@ -33,7 +33,7 @@ namespace DigitalLibrary.Controllers
 
         [HttpPost("login")]
         [ValidateModel]
-        public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto user)
+        public async Task<IActionResult> Authenticate([FromForm] UserForAuthenticationDto user)
         {
             if (!await _authenticationService.ValidateUser(user))
                 return Unauthorized();
