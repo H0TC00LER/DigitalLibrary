@@ -1,0 +1,38 @@
+name: DOT-NET
+
+on:
+    push:
+      branches:
+        - main
+    pull_request:
+      branches:
+        - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+    
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v1
+              with:
+                dotnet-version: '7.0.x'
+    
+            - name: Build backend
+              run: dotnet build DigitalLibrary/DigitalLibrary.sln
+    
+            #- name: Build frontend
+            #  run: npm install && npm run build
+            #  working-directory: frontend_directory
+    
+    analyze_backend:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            
+            - name: Analyze
+              run: dotnet analyze DigitalLibrary/DigitalLibrary.sln --checks
