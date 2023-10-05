@@ -40,4 +40,4 @@ jobs:
                 dotnet-version: '7.0.x'
     
             - name: Build backend
-              run: dotnet build DigitalLibrary/DigitalLibrary.sln -configuration Release --filter "Severity=WarningOrError"
+              run: dotnet msbuild DigitalLibrary/DigitalLibrary.sln -warnAsError
