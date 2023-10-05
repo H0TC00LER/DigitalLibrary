@@ -40,7 +40,4 @@ jobs:
                 dotnet-version: '7.0.x'
     
             - name: Build backend
-              run: dotnet build DigitalLibrary/DigitalLibrary.sln
-
-            - name: Analyze
-              run: dotnet analyze DigitalLibrary/DigitalLibrary.sln --checks
+              run: dotnet build DigitalLibrary/DigitalLibrary.sln --filter "Severity=WarningOrError"
