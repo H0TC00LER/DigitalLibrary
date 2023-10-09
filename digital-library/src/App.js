@@ -1,23 +1,24 @@
-import logo from './logo.svg';
+import AuthorCard from './components/AuthorCard'
 import './App.css';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [authors, setAuthors] = useState([]);
+
+  useEffect(() => {
+    fetch('https://localhost:7260/authors')
+      .then(response => response.json())
+      .then(data => setAuthors(data))
+      .catch(error => console.error(error));
+  }, []);
+
+  console.log(authors)
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {authors.map((author, index) => (
+        <AuthorCard key={index} author={author} />
+      ))}
     </div>
   );
 }
