@@ -1,6 +1,7 @@
 ﻿using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using System.Net;
 
 namespace DigitalLibrary.Controllers
 {
@@ -17,25 +18,16 @@ namespace DigitalLibrary.Controllers
         [HttpGet("{section}/{imageId}")]
         public async Task<IActionResult> GetImage(string section, string imageId)
         {
-            byte[]? image = null;
-            switch(section)
-            {
-                case "authorphotos":
-                    image = await _imageService.GetPhotoAsync(Section.AuthorPhotos, imageId);
-                    break;
-                case "userphotos":
-                    image = await _imageService.GetPhotoAsync(Section.UserPhotos, imageId);
-                    break;
-                case "covers":
-                    image = await _imageService.GetPhotoAsync(Section.Covers, imageId);
-                    break;
-                default:
-                    return NotFound($"There is no section named {section}.");
-            }
+            var isParseSucceed = Enum.TryParse(typeof(Section), section, true, out var parsedSection);
+            if (!isParseSucceed)
+                return NotFound($"There is no section named {section}.");
+
+            var image = await _imageService.GetPhotoAsync((Section) parsedSection!, imageId);
 
             Response.ContentType = "image/png";
             await Response.Body.WriteAsync(image, 0, image.Length);
 
+            Response.StatusCode = 200;
             return Ok();
         }
     }
