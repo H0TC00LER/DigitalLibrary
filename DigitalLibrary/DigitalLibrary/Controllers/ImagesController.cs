@@ -1,7 +1,6 @@
 ﻿using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
-using System.Net;
 
 namespace DigitalLibrary.Controllers
 {
@@ -22,13 +21,9 @@ namespace DigitalLibrary.Controllers
             if (!isParseSucceed)
                 return NotFound($"There is no section named {section}.");
 
-            var image = await _imageService.GetPhotoAsync((Section) parsedSection!, imageId);
+            var image = await _imageService.GetPhotoAsync((Section)parsedSection!, imageId);
 
-            Response.ContentType = "image/png";
-            await Response.Body.WriteAsync(image, 0, image.Length);
-
-            Response.StatusCode = 200;
-            return Ok();
+            return File(image, "image/png");
         }
     }
 }
