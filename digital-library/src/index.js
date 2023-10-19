@@ -1,13 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Root from './Pages/Root';
+import ErrorPage from './Pages/ErrorPage';
+import { BooksPage, BooksLoader } from './Pages/BooksPage';
+import BookPage from './Pages/BookPage';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "books/",
+        element: <BooksPage />,
+        loader: BooksLoader
+      },
+      {
+        path: "books/:id",
+        element: <BookPage />,
+      },
+    ],
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

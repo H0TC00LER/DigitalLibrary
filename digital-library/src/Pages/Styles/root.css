@@ -1,0 +1,10 @@
+.segment{
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    margin-block-start: 6px;
+    margin-block-end: 6px;
+}
+
+.page-content{
+    min-height: 80vh;
+}

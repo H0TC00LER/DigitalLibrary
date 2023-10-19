@@ -1,0 +1,38 @@
+header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+    justify-content: space-between;
+}
+  
+.logo img {
+    height: 40px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-grow: 1;
+}
+
+nav ul li {
+    margin-right: 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.search input {
+    padding: 5px;
+    flex-grow: 1;
+}
+
+.user-account a {
+    text-decoration: none;
+    color: #333;
+}
