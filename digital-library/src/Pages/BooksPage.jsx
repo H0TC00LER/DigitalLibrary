@@ -1,4 +1,6 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Form } from "react-router-dom";
+import BookCard from "../components/BookCard";
+import "./Styles/books-page.css"
 
 export const BooksLoader = async () => {
     const res = await fetch(`${process.env.REACT_APP_BASE_URL}books`);
@@ -12,15 +14,11 @@ export const BooksPage = () => {
     const result = useLoaderData();
     console.log(result)
     return(
-        <>
-            <p>Books</p>
-            <p>Books</p>
-            <p>Books</p>
-            <p>Books</p>
-            <p>Books</p>
-            <p>Books</p>
-            <p>Books</p>
-        </>
+        <div className="books-page">
+            {result.map(book => (
+                <BookCard imageUrl={book.coverUrl} title={book.title} description={book.description} />
+            ))}
+        </div>
     )
 }
 

@@ -29,6 +29,11 @@ namespace Service.Implementations
         {
             var filePath = GetPath(section, $"{photoId}");
 
+            //using (var stream = File.Open(filePath, FileMode.Create))
+            //{
+            //    await stream.CopyToAsync(file);
+            //}
+
             await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
         }
 

@@ -1,7 +1,6 @@
 ﻿using Domain.DataTransferObjects.DtoForAnswer;
 using Domain.DataTransferObjects.DtoForRequest;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Service.Contracts;
 
 namespace DigitalLibrary.Controllers
