@@ -123,5 +123,12 @@ namespace DigitalLibrary.Controllers
 
             return Ok();
         }
+
+        [HttpGet("total")]
+        public async Task<ActionResult<int>> GetTotalAuthorsAmount()
+        {
+            var total = await _context.Authors.AsNoTracking().CountAsync();
+            return Ok(total);
+        }
     }
 }

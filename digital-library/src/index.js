@@ -7,6 +7,10 @@ import Root from './Pages/Root';
 import ErrorPage from './Pages/ErrorPage';
 import { BooksPage, BooksLoader } from './Pages/BooksPage';
 import BookPage from './Pages/BookPage';
+import MainPage from './Pages/MainPage';
+import { MainPageLoader } from './Pages/MainPage';
+import {LoginLoader, LoginPage} from './Pages/LoginPage';
+import RegisterPage from './Pages/RegisterPage';
 
 const router = createBrowserRouter([
   {
@@ -23,6 +27,20 @@ const router = createBrowserRouter([
         path: "books/:id",
         element: <BookPage />,
       },
+      {
+        path: "/",
+        element: <MainPage />,
+        loader: MainPageLoader
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+        loader: LoginLoader
+      },
+      {
+        path: "register",
+        element: <RegisterPage />
+      }
     ],
   },
 ]);

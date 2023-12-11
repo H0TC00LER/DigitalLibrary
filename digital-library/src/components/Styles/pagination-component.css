@@ -1,0 +1,11 @@
+.pagination-container{
+    width: 100%;
+}
+
+.pages-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    background-color: gainsboro;
+}

@@ -160,5 +160,33 @@ namespace DigitalLibrary.Controllers
 
             return Ok();
         }
+
+        [HttpGet("total")]
+        public async Task<ActionResult<int>> GetTotalBooksAmount()
+        {
+            var total = await _context.Books.AsNoTracking().CountAsync();
+            return Ok(total);
+        }
+
+        [HttpGet("random-list-by-tag/{amount}")]
+        public async Task<ActionResult<Tuple<IEnumerable<BookForAnswerDto>, string>>> GetRandomListByTag(int amount)
+        {
+            var books = _context.Books.AsNoTracking().AsEnumerable();
+
+            var randomBook = books.Where(b => b.BookTags.Any()).ElementAtOrDefault(new Random().Next(books.Count()) - 1);
+            var randomTag = randomBook.BookTags.First();
+
+            var booksByTag = books.Where(b => b.BookTags.Contains(randomTag)).Take(amount);
+
+            var booksDto = booksByTag.Select(b => new BookForAnswerDto(b));
+            return Ok(Tuple.Create(booksDto, randomTag.ToString()));
+        }
+
+        [Authorize]
+        [HttpGet("auth-test")]
+        public ActionResult<string> AuthTest()
+        {
+            return "bibki";
+        }
     }
 }

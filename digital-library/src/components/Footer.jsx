@@ -9,7 +9,7 @@ const Footer = () => {
                     <li><Link to={`/`}>Главная страница</Link></li>
                     <li><Link to={`/books`}>Книги</Link></li>
                     <li><Link to={`/authors`}>Авторы</Link></li>
-                    <li><Link to={`/collections`}>Жанры</Link></li>
+                    <li><Link to={`/genres`}>Жанры</Link></li>
                 </ul>
             </nav>
             <div className="footer_contacts">

@@ -1,5 +1,5 @@
 .book-card{
-    background-color: grey;
+    background-color: rgb(208, 208, 208);
     width: 150px;
     height: 250px;
     border-radius: 10px;
@@ -8,19 +8,19 @@
     align-items: center;
     justify-content: space-around;
     margin: 5px;
+    padding: 2px;
 }
 
 .book-card img{
     height: 80%;
     width: 90%;
     border-radius: 10px;
-    margin: 2px;
 }
 
 h4{
     margin: 0px;
 }
 
-h3{
+h5{
     margin: 0px;
 }

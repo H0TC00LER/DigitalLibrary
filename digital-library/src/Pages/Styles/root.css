@@ -9,3 +9,11 @@
 .page-content{
     min-height: 80vh;
 }
+
+.vertical-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    background-color: gainsboro;
+}

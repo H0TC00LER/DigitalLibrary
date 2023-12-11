@@ -17,8 +17,8 @@ const BookCard = ({ imageUrl, title, description }) => {
     return(
         <div className="book-card">
             <img src={image} alt="image"/>
-            <h3>{title}</h3>
-            <h4>{description}</h4>
+            <h4>{title}</h4>
+            <h5>{description}</h5>
         </div>
     )
 }

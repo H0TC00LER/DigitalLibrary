@@ -1,7 +1,32 @@
 import "../components/Styles/header.css"
 import { Link } from "react-router-dom";
+import { isLogged, LogoutUser } from "./AuthManager";
 
 const Header = () => {
+    const handleExit = () => {
+        LogoutUser();
+    }
+
+    const UserLink = () => {
+        if (isLogged) {
+            return (
+                <>
+                    <Link to={`/userPage`}>Мой аккаунт</Link>
+                    |
+                    <a onClick={handleExit} href="#">Выйти</a>
+                </>
+                
+            )
+        }
+        return (
+            <>
+                <Link to={`/register`}>Регистрация</Link>
+                |
+                <Link to={`/login`}>Вход</Link>
+            </>
+        )
+    }
+
     return (
         <header className="segment">
             <div className="logo">
@@ -19,7 +44,7 @@ const Header = () => {
                 <input type="text" placeholder="Search"/>
             </div>
             <div className="user-account">
-                <a href="#">User Account</a>
+                <UserLink/>
             </div>
         </header>
     );

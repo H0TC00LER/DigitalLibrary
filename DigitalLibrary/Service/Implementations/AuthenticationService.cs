@@ -87,7 +87,7 @@ namespace Service.Implementations
                 issuer: jwtSettings["validIssuer"],
                 audience: jwtSettings["validAudience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
+                expires: DateTime.Now.AddYears(Convert.ToInt16(jwtSettings["expires"])),
                 signingCredentials: signingCredentials
             );
 
